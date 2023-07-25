@@ -58,7 +58,7 @@ class TodoController {
 			@Override
 			protected void renderMergedOutputModel(Map<String, Object> model, HttpServletRequest request,
 					HttpServletResponse response) throws Exception {
-				response.getWriter().println("<form id=\"new-todo\">" + form.title() + "</form>");
+				response.getWriter().println("<form id=\"new-todo\">" + form.getTitle() + "</form>");
 			}
 
 		};
@@ -82,15 +82,30 @@ class TemplateModel {
 	}
 
 	public void save(Form form) {
-		todos.save(new Todo(UUID.randomUUID(), form.title(), false));
+		todos.save(new Todo(UUID.randomUUID(), form.getTitle(), false));
 	}
 
-	public record Form(@NotBlank String title, String action) {
+	public class Form {
+		@NotBlank String title;
+		String action;
 		Form() {
 			this("");
 		}
 		Form(String title) {
-			this(title, null);
+			this.title = title;
 		}
+		public String getTitle() {
+			return title;
+		}
+		public void setTitle(String title) {
+			this.title = title;
+		}
+		public String getAction() {
+			return action;
+		}
+		public void setAction(String action) {
+			this.action = action;
+		}
+		
 	}
 }

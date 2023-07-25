@@ -20,6 +20,7 @@ import com.example.demo.TemplateModel.Form;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 
 @SpringBootApplication
 @Controller
@@ -51,14 +52,13 @@ class TodoController {
 	}
 
 	@PostMapping("/")
-	View create(@Valid @ModelAttribute Form form,
-			@RequestParam Optional<String> filter) {
+	View create(@Valid @ModelAttribute Form form, @RequestParam Optional<String> filter) {
 		template.save(form);
 		return new AbstractView() {
 			@Override
 			protected void renderMergedOutputModel(Map<String, Object> model, HttpServletRequest request,
 					HttpServletResponse response) throws Exception {
-				response.getWriter().println("<form id=\"new-todo\"></form>");
+				response.getWriter().println("<form id=\"new-todo\">" + form.title() + "</form>");
 			}
 
 		};
@@ -85,5 +85,12 @@ class TemplateModel {
 		todos.save(new Todo(UUID.randomUUID(), form.title(), false));
 	}
 
-	public record Form(String title){}
+	public record Form(@NotBlank String title, String action) {
+		Form() {
+			this("");
+		}
+		Form(String title) {
+			this(title, null);
+		}
+	}
 }

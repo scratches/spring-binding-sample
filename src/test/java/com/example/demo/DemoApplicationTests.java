@@ -21,6 +21,7 @@ class DemoApplicationTests {
 				.expectStatus()
 				.isOk().expectBody(String.class).value(value -> {
 					assertThat(value).contains("<form id=\"new-todo\"");
+					assertThat(value).contains("Foo");
 				});
 	}
 
